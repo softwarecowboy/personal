@@ -1,6 +1,7 @@
 use std::{fs::read_to_string, path::PathBuf};
 
 use chrono::NaiveDate;
+use pulldown_cmark::{html, Options, Parser};
 use serde::{Deserialize, Serialize};
 use utoipa::ToSchema;
 
@@ -50,9 +51,10 @@ pub async fn parse_to_data(path: &PathBuf) -> Result<Post, ApplicationError> {
     })?;
 
     let content_replaced_tags = replace_relative_paths(content).await;
+    let html_content = markdown_to_html(&content_replaced_tags);
 
     Ok(Post {
-        data: content_replaced_tags,
+        data: html_content,
         markdown: markdown,
     })
 }
@@ -73,4 +75,18 @@ async fn replace_relative_paths(content: &str) -> String {
         }
     })
     .to_string()
+}
+
+/// Convert markdown to HTML
+fn markdown_to_html(markdown: &str) -> String {
+    let mut options = Options::empty();
+    options.insert(Options::ENABLE_STRIKETHROUGH);
+    options.insert(Options::ENABLE_TABLES);
+    options.insert(Options::ENABLE_FOOTNOTES);
+    options.insert(Options::ENABLE_TASKLISTS);
+
+    let parser = Parser::new_ext(markdown, options);
+    let mut html_output = String::new();
+    html::push_html(&mut html_output, parser);
+    html_output
 }

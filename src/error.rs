@@ -21,4 +21,7 @@ pub enum ApplicationError {
 
     #[error("Failed to read file: {0}")]
     IoError(#[from] std::io::Error),
+
+    #[error("Failed to clone repository: {0}")]
+    GitError(#[from] git2::Error),
 }

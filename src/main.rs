@@ -4,7 +4,7 @@ use axum::{routing::get, Router};
 use personal::db::{Database, InMemDatabase};
 use personal::{
     http::{handlers, state::AppState},
-    repo_utils::{get_posts_from_repository, Repository},
+    repo_utils::{clone_and_ingest_repository, get_posts_from_repository, Repository},
 };
 use tower_http::services::ServeDir;
 
@@ -12,7 +12,14 @@ use tower_http::services::ServeDir;
 async fn main() {
     let mut db = InMemDatabase::new();
 
-    // todo switch to repo
+    // Option 1: Clone from GitHub repository
+    // Uncomment and replace with your actual repository URL
+    // let repo_url = "https://github.com/username/blog-posts";
+    // let posts = clone_and_ingest_repository(repo_url)
+    //     .await
+    //     .expect("Failed to clone and load posts from repository");
+
+    // Option 2: Load from local directory (current approach)
     let repo_path = Path::new("tests/data");
     let repo = Repository::try_from(repo_path).expect("Failed to create repository");
     let posts = get_posts_from_repository(repo)

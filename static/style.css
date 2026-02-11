@@ -226,3 +226,95 @@ article .content pre {
     white-space: pre-wrap;
     word-wrap: break-word;
 }
+
+/* Markdown content styling */
+.markdown-content {
+    font-size: 1.0625rem;
+    line-height: 1.75;
+}
+
+.markdown-content pre {
+    margin: 1.5rem 0;
+    padding: 0;
+    background-color: transparent !important;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.markdown-content pre code {
+    display: block;
+    padding: 1.25rem;
+    overflow-x: auto;
+    font-size: 0.875rem;
+    line-height: 1.7;
+    font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', 'Courier New', monospace;
+    border-radius: 8px;
+}
+
+.markdown-content code:not(pre code) {
+    background-color: rgb(241 245 249);
+    padding: 0.2em 0.4em;
+    border-radius: 4px;
+    font-size: 0.875em;
+    font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+}
+
+@media (prefers-color-scheme: dark) {
+    .markdown-content code:not(pre code) {
+        background-color: rgb(30 41 59);
+    }
+}
+
+.markdown-content table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1.5rem 0;
+}
+
+.markdown-content table th,
+.markdown-content table td {
+    border: 1px solid rgb(226 232 240);
+    padding: 0.75rem;
+    text-align: left;
+}
+
+@media (prefers-color-scheme: dark) {
+
+    .markdown-content table th,
+    .markdown-content table td {
+        border-color: rgb(51 65 85);
+    }
+}
+
+.markdown-content table th {
+    background-color: rgb(248 250 252);
+    font-weight: 600;
+}
+
+@media (prefers-color-scheme: dark) {
+    .markdown-content table th {
+        background-color: rgb(30 41 59);
+    }
+}
+
+.markdown-content blockquote {
+    border-left: 4px solid rgb(226 232 240);
+    padding-left: 1rem;
+    margin: 1.5rem 0;
+    font-style: italic;
+    color: rgb(100 116 139);
+}
+
+@media (prefers-color-scheme: dark) {
+    .markdown-content blockquote {
+        border-color: rgb(51 65 85);
+        color: rgb(148 163 184);
+    }
+}
+
+.markdown-content img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+    margin: 1.5rem 0;
+}

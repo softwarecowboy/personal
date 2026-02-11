@@ -5,7 +5,7 @@
 {% block content %}
 <article class="max-w-4xl mx-auto px-4 py-8 md:py-12">
     <header class="mb-8 md:mb-10">
-        <h1 class="text-3xl sm:text-4xl md:text-5xl font-light tracking-tight mb-4 md:mb-5">
+        <h1 class="text-3xl sm:text-4xl md:text-5xl font-light tracking-tight mb-4 md:mb-5 text-slate-900 dark:text-slate-200">
             {{ post.markdown.title }}
         </h1>
 
@@ -34,9 +34,8 @@
         </div>
     </header>
 
-    <div class="prose prose-slate dark:prose-invert max-w-none">
-        <pre
-            class="bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded p-4 overflow-x-auto text-sm">{{ post.data }}</pre>
+    <div class="prose prose-slate dark:prose-invert max-w-none markdown-content">
+        {{ post.data|safe }}
     </div>
 
     <nav class="mt-12 md:mt-14 pt-8 border-t border-slate-200 dark:border-slate-800">
@@ -49,4 +48,12 @@
         </a>
     </nav>
 </article>
+
+<!-- Highlight.js for syntax highlighting -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css"
+    media="(prefers-color-scheme: light)">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css"
+    media="(prefers-color-scheme: dark)">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script>hljs.highlightAll();</script>
 {% endblock %}
