@@ -220,6 +220,48 @@ article .content pre {
     line-height: 1.75;
 }
 
+.markdown-content p {
+    margin-bottom: 1.25rem;
+}
+
+.markdown-content h1 {
+    font-size: 2rem;
+    font-weight: 600;
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+    line-height: 1.3;
+    color: rgb(15 23 42);
+}
+
+.markdown-content h2 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+    line-height: 1.4;
+    color: rgb(30 41 59);
+}
+
+.markdown-content h3 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-top: 1.5rem;
+    margin-bottom: 0.75rem;
+    color: rgb(51 65 85);
+}
+
+.dark .markdown-content h1 {
+    color: rgb(226 232 240);
+}
+
+.dark .markdown-content h2 {
+    color: rgb(203 213 225);
+}
+
+.dark .markdown-content h3 {
+    color: rgb(148 163 184);
+}
+
 .markdown-content pre {
     margin: 1.5rem 0;
     padding: 0;
@@ -246,10 +288,8 @@ article .content pre {
     font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
 }
 
-@media (prefers-color-scheme: dark) {
-    .markdown-content code:not(pre code) {
-        background-color: rgb(30 41 59);
-    }
+.dark .markdown-content code:not(pre code) {
+    background-color: rgb(30 41 59);
 }
 
 .markdown-content table {
@@ -265,12 +305,9 @@ article .content pre {
     text-align: left;
 }
 
-@media (prefers-color-scheme: dark) {
-
-    .markdown-content table th,
-    .markdown-content table td {
-        border-color: rgb(51 65 85);
-    }
+.dark .markdown-content table th,
+.dark .markdown-content table td {
+    border-color: rgb(51 65 85);
 }
 
 .markdown-content table th {
@@ -278,10 +315,8 @@ article .content pre {
     font-weight: 600;
 }
 
-@media (prefers-color-scheme: dark) {
-    .markdown-content table th {
-        background-color: rgb(30 41 59);
-    }
+.dark .markdown-content table th {
+    background-color: rgb(30 41 59);
 }
 
 .markdown-content blockquote {
@@ -292,11 +327,9 @@ article .content pre {
     color: rgb(100 116 139);
 }
 
-@media (prefers-color-scheme: dark) {
-    .markdown-content blockquote {
-        border-color: rgb(51 65 85);
-        color: rgb(148 163 184);
-    }
+.dark .markdown-content blockquote {
+    border-color: rgb(51 65 85);
+    color: rgb(148 163 184);
 }
 
 .markdown-content img {

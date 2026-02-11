@@ -74,13 +74,39 @@ async fn replace_relative_paths(content: &str) -> String {
     .to_string()
 }
 fn markdown_to_html(markdown: &str) -> String {
+    // Preserve exact spacing: single line breaks = <br>, blank lines = <br><br>
+    let mut processed = String::new();
+    let lines: Vec<&str> = markdown.lines().collect();
+
+    for (i, line) in lines.iter().enumerate() {
+        processed.push_str(line);
+
+        if i < lines.len() - 1 {
+            let next_line = lines[i + 1];
+
+            // If current line is empty, we're at a blank line - add double break for visual space
+            if line.is_empty() {
+                processed.push_str("  \n  \n");
+            }
+            // If next line is empty, add single break before the blank line
+            else if next_line.is_empty() {
+                processed.push_str("  \n");
+            }
+            // Both lines have content - single line break becomes <br>
+            else {
+                processed.push_str("  \n");
+            }
+        }
+    }
+
     let mut options = Options::empty();
     options.insert(Options::ENABLE_STRIKETHROUGH);
     options.insert(Options::ENABLE_TABLES);
     options.insert(Options::ENABLE_FOOTNOTES);
     options.insert(Options::ENABLE_TASKLISTS);
+    options.insert(Options::ENABLE_SMART_PUNCTUATION);
 
-    let parser = Parser::new_ext(markdown, options);
+    let parser = Parser::new_ext(&processed, options);
     let mut html_output = String::new();
     html::push_html(&mut html_output, parser);
     html_output

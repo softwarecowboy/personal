@@ -30,8 +30,9 @@
         <div class="max-w-7xl mx-auto px-4 py-8 sm:py-12 md:py-16">
             <div class="mb-8 md:mb-10">
                 <h1 id="title-container"
-                    class="text-3xl sm:text-4xl md:text-5xl font-light tracking-tight mb-2 inline-block h-14 sm:h-16 md:h-20 flex items-center">
-                    <a href="/" class="cursor-pointer hover:text-slate-700 dark:hover:text-slate-300 transition-colors">
+                    class="text-3xl sm:text-4xl md:text-5xl font-light tracking-tight mb-2 inline-block min-h-[4rem] sm:min-h-[4.5rem] md:min-h-[5.5rem] flex items-center">
+                    <a href="/"
+                        class="cursor-pointer hover:text-slate-700 dark:hover:text-slate-300 transition-colors flex items-center pb-2">
                         <span id="full-text"
                             class="max-w-0 inline-block transition-all duration-500 ease-out overflow-hidden whitespace-nowrap opacity-0">rust&nbsp;with&nbsp;data</span><span
                             id="short-text"
@@ -200,9 +201,36 @@
         const fullText = document.getElementById('full-text');
         const shortText = document.getElementById('short-text');
         let hoverTimeout;
+        let hoverCount = 0;
+
+        // Array of different text variations to cycle through
+        const textVariations = [
+            'rust with data',
+            'rafal waldemar draws',
+            'definitely not responsive web design',
+            'rear wheel drive',
+            'rust with data',
+            'rotary wing division',
+            'real world data',
+            'rust with data',
+            'rewarding work department',
+            'risk weighted distribution',
+            'random wild descriptions',
+            'real world data',
+            'rust with data',
+            'remote window detection',
+            'reward weighted delivery',
+            'read write delete',
+            'rust with data',
+        ];
 
         titleContainer.addEventListener('mouseenter', () => {
             clearTimeout(hoverTimeout);
+
+            const index = Math.min(hoverCount, textVariations.length - 1);
+            fullText.textContent = textVariations[index];
+            hoverCount++;
+
             fullText.style.maxWidth = '100%';
             setTimeout(() => {
                 shortText.style.opacity = '0';
@@ -241,7 +269,7 @@
             const isDark = document.documentElement.classList.contains('dark');
             const label = document.getElementById('theme-label');
             if (label) {
-                label.textContent = isDark ? 'Dark' : 'Light';
+                label.textContent = isDark ? 'Light' : 'Dark';
             }
         }
 
