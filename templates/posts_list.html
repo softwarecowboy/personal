@@ -1,0 +1,34 @@
+{% extends "index.html" %}
+
+{% block title %}Posts - Personal Blog{% endblock %}
+
+{% block content %}
+<div class="posts-list">
+    {% if posts.is_empty() %}
+    <p>No posts found.</p>
+    {% else %}
+    {% for post in posts %}
+    <article class="post-card">
+        <h2><a href="/posts/{{ post.markdown.slug }}">{{ post.markdown.title }}</a></h2>
+        <div class="metadata">
+            <span class="date">{{ post.markdown.date }}</span>
+            {% if post.markdown.tags.len() > 0 %}
+            <div class="tags">
+                {% for tag in post.markdown.tags %}
+                <span class="tag">{{ tag }}</span>
+                {% endfor %}
+            </div>
+            {% endif %}
+            {% match post.markdown.series %}
+            {% when Some(series) %}
+            <div class="series">
+                <span>{{ series.title }} - Episode {{ series.ep }}</span>
+            </div>
+            {% when None %}
+            {% endmatch %}
+        </div>
+    </article>
+    {% endfor %}
+    {% endif %}
+</div>
+{% endblock %}

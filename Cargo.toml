@@ -1,9 +1,10 @@
 [package]
 name = "personal"
 version = "0.1.0"
-edition = "2024"
+edition = "2021"
 
 [dependencies]
+askama = "0.12"
 axum = "0.8.8"
 chrono = {version="0.4.43", features=["serde"]}
 regex = "1.12.3"
@@ -11,6 +12,8 @@ serde = {version = "1.0.228", features = ["derive"]}
 serde_yaml = "0.9.34"
 thiserror = "2.0.18"
 tokio = { version = "1.49.0", features = ["macros", "rt-multi-thread"] }
+tower = "0.5"
+tower-http = { version = "0.6", features = ["fs"] }
 utoipa = {version="5.4.0", features=["chrono"]}
 utoipa-axum = "0.2.0"
 utoipa-swagger-ui = { version = "9.0.2", features = ["axum"] }

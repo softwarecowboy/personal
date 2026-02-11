@@ -11,6 +11,9 @@ pub trait Database {
     fn get_by_series(&self, series: String) -> Vec<Post>;
     fn get_by_keyword(&self, keyword: String) -> Vec<Post>;
     fn get_by_year_month(&self, year: i32, month: Option<u32>) -> Vec<Post>;
+    fn get_last_n_posts(&self, n: usize) -> Vec<Post>;
+    fn get_all_tags_with_count(&self) -> Vec<(String, u8)>;
+    fn get_all_dates_with_count(&self) -> Vec<((i32, u32), u8)>;
 
     fn insert_parsed_to_database(&mut self, post: Post) -> Result<(), ApplicationError>;
 }
@@ -105,5 +108,32 @@ impl Database for InMemDatabase {
             .filter(|((y, m), _)| *y == year && month.map_or(true, |month| *m == month))
             .filter_map(|(_, slug)| self.by_slug.get(slug).cloned())
             .collect()
+    }
+
+    fn get_last_n_posts(&self, n: usize) -> Vec<Post> {
+        let mut posts: Vec<Post> = self.by_slug.values().cloned().collect();
+        posts.sort_by(|a, b| b.markdown.date.cmp(&a.markdown.date));
+        posts.into_iter().take(n).collect()
+    }
+
+    fn get_all_tags_with_count(&self) -> Vec<(String, u8)> {
+        self.by_tag
+            .iter()
+            .map(|(tag, slugs)| {
+                let count = slugs.split(',').filter(|s| !s.is_empty()).count() as u8;
+                (tag.clone(), count)
+            })
+            .collect()
+    }
+
+    fn get_all_dates_with_count(&self) -> Vec<((i32, u32), u8)> {
+        let mut date_counts: HashMap<(i32, u32), u8> = HashMap::new();
+
+        for post in self.by_slug.values() {
+            let date = (post.markdown.date.year(), post.markdown.date.month());
+            *date_counts.entry(date).or_insert(0) += 1;
+        }
+
+        date_counts.into_iter().collect()
     }
 }

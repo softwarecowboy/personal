@@ -1,0 +1,31 @@
+{% extends "index.html" %}
+
+{% block title %}{{ post.markdown.title }} - Personal Blog{% endblock %}
+
+{% block content %}
+<article>
+    <h1>{{ post.markdown.title }}</h1>
+
+    <div class="metadata">
+        <span class="date">{{ post.markdown.date }}</span>
+        {% if post.markdown.tags.len() > 0 %}
+        <div class="tags">
+            {% for tag in post.markdown.tags %}
+            <span class="tag">{{ tag }}</span>
+            {% endfor %}
+        </div>
+        {% endif %}
+        {% match post.markdown.series %}
+        {% when Some(series) %}
+        <div class="series">
+            <span>{{ series.title }} - Episode {{ series.ep }}</span>
+        </div>
+        {% when None %}
+        {% endmatch %}
+    </div>
+
+    <div class="content">
+        <pre>{{ post.data }}</pre>
+    </div>
+</article>
+{% endblock %}
