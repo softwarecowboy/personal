@@ -45,14 +45,14 @@ jobs:
         SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
         SERVER_HOST: ${{ secrets.SERVER_HOST }}
         SERVER_USER: ${{ secrets.SERVER_USER }}
+        SERVER_HOST_KEY: ${{ secrets.SERVER_HOST_KEY }}
       run: |
         # Setup SSH
         mkdir -p ~/.ssh
         echo "$SSH_PRIVATE_KEY" > ~/.ssh/deploy_key
         chmod 600 ~/.ssh/deploy_key
-        ssh-keyscan -H $SERVER_HOST >> ~/.ssh/known_hosts
-        
+        echo "$SERVER_HOST_KEY" >> ~/.ssh/known_hosts
+
         # Copy binary to server
-        scp -i ~/.ssh/deploy_key target/release/personal $SERVER_USER@$SERVER_HOST:/opt/personal/personal-new
-        
+        scp -i ~/.ssh/deploy_key -P 10194 target/release/personal $SERVER_USER@$SERVER_HOST:/opt/personal/personal-new
         echo "✅ Binary copied to server at /opt/personal/personal-new"
