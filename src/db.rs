@@ -98,8 +98,49 @@ impl Database for InMemDatabase {
             .unwrap_or_default()
     }
 
-    fn get_by_keyword(&self, _keyword: String) -> Vec<Post> {
-        Vec::new()
+    fn get_by_keyword(&self, keyword: String) -> Vec<Post> {
+        let keyword_lower = keyword.to_lowercase();
+        let mut results = Vec::new();
+        let mut seen = std::collections::HashSet::new();
+
+        // Search through titles and slugs
+        for (slug, post) in &self.by_slug {
+            if slug.to_lowercase().contains(&keyword_lower)
+                || post.markdown.title.to_lowercase().contains(&keyword_lower)
+            {
+                if seen.insert(slug.clone()) {
+                    results.push(post.clone());
+                }
+            }
+        }
+
+        // Search through series
+        for (series_name, slugs) in &self.by_series {
+            if series_name.to_lowercase().contains(&keyword_lower) {
+                for slug in slugs.split(',').filter(|s| !s.is_empty()) {
+                    if seen.insert(slug.to_string()) {
+                        if let Some(post) = self.by_slug.get(slug) {
+                            results.push(post.clone());
+                        }
+                    }
+                }
+            }
+        }
+
+        // Search through tags
+        for (tag, slugs) in &self.by_tag {
+            if tag.to_lowercase().contains(&keyword_lower) {
+                for slug in slugs.split(',').filter(|s| !s.is_empty()) {
+                    if seen.insert(slug.to_string()) {
+                        if let Some(post) = self.by_slug.get(slug) {
+                            results.push(post.clone());
+                        }
+                    }
+                }
+            }
+        }
+
+        results
     }
 
     fn get_by_year_month(&self, year: i32, month: Option<u32>) -> Vec<Post> {

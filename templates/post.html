@@ -1,31 +1,52 @@
 {% extends "index.html" %}
 
-{% block title %}{{ post.markdown.title }} - Personal Blog{% endblock %}
+{% block title %} | {{ post.markdown.title }}{% endblock %}
 
 {% block content %}
-<article>
-    <h1>{{ post.markdown.title }}</h1>
+<article class="max-w-4xl mx-auto px-4 py-8 md:py-12">
+    <header class="mb-8 md:mb-10">
+        <h1 class="text-3xl sm:text-4xl md:text-5xl font-light tracking-tight mb-4 md:mb-5">
+            {{ post.markdown.title }}
+        </h1>
 
-    <div class="metadata">
-        <span class="date">{{ post.markdown.date }}</span>
-        {% if post.markdown.tags.len() > 0 %}
-        <div class="tags">
-            {% for tag in post.markdown.tags %}
-            <span class="tag">{{ tag }}</span>
-            {% endfor %}
+        <div class="space-y-3 text-sm md:text-base text-slate-600 dark:text-slate-400">
+            <div class="font-light">Published {{ post.markdown.date }}</div>
+
+            {% if post.markdown.tags.len() > 0 %}
+            <div class="flex gap-2 flex-wrap">
+                {% for tag in post.markdown.tags %}
+                <a href="/posts/by-tag?tag={{ tag }}"
+                    class="px-2 py-1 text-xs bg-slate-100 dark:bg-slate-800 rounded text-slate-700 dark:text-slate-300 font-medium hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors cursor-pointer">{{
+                    tag }}</a>
+                {% endfor %}
+            </div>
+            {% endif %}
+
+            {% match post.markdown.series %}
+            {% when Some(series) %}
+            <div class="italic">
+                <a href="/posts/by-series?series={{ series.title }}"
+                    class="hover:text-slate-700 dark:hover:text-slate-200 transition-colors">{{ series.title }}</a>
+                — Episode {{ series.ep }}
+            </div>
+            {% when None %}
+            {% endmatch %}
         </div>
-        {% endif %}
-        {% match post.markdown.series %}
-        {% when Some(series) %}
-        <div class="series">
-            <span>{{ series.title }} - Episode {{ series.ep }}</span>
-        </div>
-        {% when None %}
-        {% endmatch %}
+    </header>
+
+    <div class="prose prose-slate dark:prose-invert max-w-none">
+        <pre
+            class="bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded p-4 overflow-x-auto text-sm">{{ post.data }}</pre>
     </div>
 
-    <div class="content">
-        <pre>{{ post.data }}</pre>
-    </div>
+    <nav class="mt-12 md:mt-14 pt-8 border-t border-slate-200 dark:border-slate-800">
+        <a href="/"
+            class="inline-flex items-center gap-2 px-4 py-2.5 border border-slate-300 dark:border-slate-700 rounded hover:bg-slate-50 dark:hover:bg-slate-900 transition-colors text-sm font-medium">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 12H5m7 7l-7-7 7-7" />
+            </svg>
+            <span>Back to posts</span>
+        </a>
+    </nav>
 </article>
 {% endblock %}
