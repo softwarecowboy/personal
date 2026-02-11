@@ -43,21 +43,14 @@ impl Database for InMemDatabase {
         let slug = post.markdown.slug.clone();
         let date: (i32, u32) = (post.markdown.date.year(), post.markdown.date.month());
 
-        // Insert by slug
         self.by_slug.entry(slug.clone()).or_insert(post.clone());
-
-        // Insert by date
         self.by_date.entry(date).or_insert(slug.clone());
-
-        // Insert by tags
         for tag in &post.markdown.tags {
             self.by_tag
                 .entry(tag.clone())
                 .or_insert_with(String::new)
                 .push_str(&format!("{},", slug));
         }
-
-        // Insert by series
         if let Some(series) = &post.markdown.series {
             self.by_series
                 .entry(series.title.clone())
@@ -103,7 +96,6 @@ impl Database for InMemDatabase {
         let mut results = Vec::new();
         let mut seen = std::collections::HashSet::new();
 
-        // Search through titles and slugs
         for (slug, post) in &self.by_slug {
             if slug.to_lowercase().contains(&keyword_lower)
                 || post.markdown.title.to_lowercase().contains(&keyword_lower)
@@ -113,8 +105,6 @@ impl Database for InMemDatabase {
                 }
             }
         }
-
-        // Search through series
         for (series_name, slugs) in &self.by_series {
             if series_name.to_lowercase().contains(&keyword_lower) {
                 for slug in slugs.split(',').filter(|s| !s.is_empty()) {
@@ -126,8 +116,6 @@ impl Database for InMemDatabase {
                 }
             }
         }
-
-        // Search through tags
         for (tag, slugs) in &self.by_tag {
             if tag.to_lowercase().contains(&keyword_lower) {
                 for slug in slugs.split(',').filter(|s| !s.is_empty()) {

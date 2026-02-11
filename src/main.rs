@@ -1,40 +1,39 @@
-use std::path::Path;
-
 use axum::{routing::get, Router};
+use chrono::{Duration as ChronoDuration, Local, TimeZone};
 use personal::db::{Database, InMemDatabase};
 use personal::{
+    error::ApplicationError,
     http::{handlers, state::AppState},
-    repo_utils::{clone_and_ingest_repository, get_posts_from_repository, Repository},
+    repo_utils::clone_and_ingest_repository,
 };
 use tower_http::services::ServeDir;
 
 #[tokio::main]
 async fn main() {
-    let mut db = InMemDatabase::new();
-
-    // Option 1: Clone from GitHub repository
-    // Uncomment and replace with your actual repository URL
-    // let repo_url = "https://github.com/username/blog-posts";
-    // let posts = clone_and_ingest_repository(repo_url)
-    //     .await
-    //     .expect("Failed to clone and load posts from repository");
-
-    // Option 2: Load from local directory (current approach)
-    let repo_path = Path::new("tests/data");
-    let repo = Repository::try_from(repo_path).expect("Failed to create repository");
-    let posts = get_posts_from_repository(repo)
+    let repo_url = "https://github.com/softwarecowboy/blog";
+    let db = build_database(repo_url)
         .await
         .expect("Failed to load posts");
-
-    // todo perform periodically/middleware
-    for post in posts {
-        db.insert_parsed_to_database(post)
-            .expect("Failed to insert post");
-    }
-
     println!("Loaded {} posts", db.by_slug.len());
 
     let state = AppState::new(db);
+    let repo_url = repo_url.to_string();
+    let db_handle = state.db.clone();
+    tokio::spawn(async move {
+        loop {
+            let sleep_for = duration_until_next_midnight();
+            tokio::time::sleep(sleep_for).await;
+            match build_database(&repo_url).await {
+                Ok(new_db) => {
+                    let mut guard = db_handle.lock().expect("the database should be lockable");
+                    *guard = new_db;
+                }
+                Err(err) => {
+                    eprintln!("Failed to reload posts: {err}");
+                }
+            }
+        }
+    });
 
     let app = Router::new()
         .route("/", get(handlers::html_index))
@@ -58,4 +57,25 @@ async fn main() {
     axum::serve(listener, app)
         .await
         .expect("Server failed to start");
+}
+
+async fn build_database(repo_url: &str) -> Result<InMemDatabase, ApplicationError> {
+    let posts = clone_and_ingest_repository(repo_url).await?;
+    let mut db = InMemDatabase::new();
+    for post in posts {
+        db.insert_parsed_to_database(post)?;
+    }
+    Ok(db)
+}
+
+fn duration_until_next_midnight() -> std::time::Duration {
+    let now = Local::now();
+    let tomorrow = now.date_naive() + ChronoDuration::days(1);
+    let next_midnight = Local
+        .from_local_datetime(&tomorrow.and_hms_opt(0, 0, 0).unwrap())
+        .unwrap();
+    let duration = next_midnight - now;
+    duration
+        .to_std()
+        .unwrap_or_else(|_| std::time::Duration::from_secs(0))
 }

@@ -8,8 +8,6 @@ use serde::Deserialize;
 use std::collections::HashMap;
 
 use crate::{data::Post, db::Database, http::state::AppState};
-
-// Template structs
 #[derive(Template)]
 #[template(path = "post.html")]
 pub struct PostTemplate {
@@ -54,8 +52,6 @@ pub struct DateQuery {
     pub year: i32,
     pub month: Option<u32>,
 }
-
-// HTML Handlers
 
 pub async fn html_get_post_by_slug(
     Path(slug): Path<String>,
@@ -177,15 +173,11 @@ pub async fn html_index(State(state): State<AppState>) -> Result<Html<String>, S
     Ok(Html(html))
 }
 
-// Helper function to prepare navigation data
 fn prepare_nav_data(
     db: &crate::db::InMemDatabase,
 ) -> (Vec<(String, u8)>, Vec<(i32, Vec<(String, u32, u8)>)>) {
-    // Get tags sorted by count (descending)
     let mut tags_with_count = db.get_all_tags_with_count();
     tags_with_count.sort_by(|a, b| b.1.cmp(&a.1));
-
-    // Get dates grouped by year with months
     let dates_with_count = db.get_all_dates_with_count();
     let mut dates_by_year: HashMap<i32, Vec<(String, u32, u8)>> = HashMap::new();
 
@@ -197,12 +189,11 @@ fn prepare_nav_data(
         ));
     }
 
-    // Convert to sorted vec (years descending, months ascending)
     let mut dates_by_year: Vec<(i32, Vec<(String, u32, u8)>)> = dates_by_year.into_iter().collect();
-    dates_by_year.sort_by(|a, b| b.0.cmp(&a.0)); // Sort years descending
+    dates_by_year.sort_by(|a, b| b.0.cmp(&a.0));
 
     for (_, months) in &mut dates_by_year {
-        months.sort_by(|a, b| a.1.cmp(&b.1)); // Sort months by number ascending
+        months.sort_by(|a, b| a.1.cmp(&b.1));
     }
 
     (tags_with_count, dates_by_year)

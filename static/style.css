@@ -17,7 +17,6 @@ body {
     line-height: 1.6;
 }
 
-/* Typography */
 h1,
 h2,
 h3,
@@ -34,7 +33,6 @@ a {
     transition: color 0.2s ease;
 }
 
-/* Smooth transitions */
 input,
 button,
 select {
@@ -42,7 +40,6 @@ select {
     transition-duration: 0.2s;
 }
 
-/* Focus states */
 input:focus-visible {
     outline: none;
 }
@@ -51,7 +48,6 @@ button:focus-visible {
     outline: none;
 }
 
-/* Post cards enhanced styling */
 article {
     max-width: 100%;
 }
@@ -92,14 +88,12 @@ article .content code {
     font-size: 0.9em;
 }
 
-/* Responsive container */
 .container {
     max-width: 100%;
     margin: 0 auto;
     padding: 0;
 }
 
-/* Dropdown enhancements */
 .relative.group button {
     position: relative;
 }
@@ -109,12 +103,10 @@ article .content code {
     opacity: 1;
 }
 
-/* Search input styling */
 #search-input::placeholder {
     opacity: 0.6;
 }
 
-/* Tags styling */
 .tag {
     display: inline-block;
     padding: 0.25rem 0.75rem;
@@ -123,12 +115,10 @@ article .content code {
     font-weight: 500;
 }
 
-/* Series styling */
 .series {
     font-style: italic;
 }
 
-/* Print styles */
 @media print {
 
     header,
@@ -143,7 +133,6 @@ article .content code {
     }
 }
 
-/* Accessibility */
 @media (prefers-reduced-motion: reduce) {
     * {
         animation-duration: 0.01ms !important;
@@ -194,7 +183,6 @@ nav {
     flex-wrap: wrap;
 }
 
-/* Post detail page styles */
 article {
     max-width: 800px;
     margin: 2rem auto;
@@ -227,7 +215,6 @@ article .content pre {
     word-wrap: break-word;
 }
 
-/* Markdown content styling */
 .markdown-content {
     font-size: 1.0625rem;
     line-height: 1.75;

@@ -61,13 +61,10 @@ pub async fn parse_to_data(path: &PathBuf) -> Result<Post, ApplicationError> {
 
 async fn replace_relative_paths(content: &str) -> String {
     use regex::Regex;
-    // Matches [alt text](path) and filters for relative paths only
     let re = Regex::new(r"\[([^\]]+)\]\(([^)]+)\)").unwrap();
     re.replace_all(content, |caps: &regex::Captures| {
         let alt_text = &caps[1];
         let path = &caps[2];
-
-        // Only replace if path is relative (doesn't start with http://, https://, or /)
         if path.starts_with("http://") || path.starts_with("https://") || path.starts_with("/") {
             format!("[{}]({})", alt_text, path)
         } else {
@@ -76,8 +73,6 @@ async fn replace_relative_paths(content: &str) -> String {
     })
     .to_string()
 }
-
-/// Convert markdown to HTML
 fn markdown_to_html(markdown: &str) -> String {
     let mut options = Options::empty();
     options.insert(Options::ENABLE_STRIKETHROUGH);
