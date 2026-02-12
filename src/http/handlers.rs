@@ -57,8 +57,11 @@ pub async fn html_get_post_by_slug(
     Path(slug): Path<String>,
     State(state): State<AppState>,
 ) -> Result<Html<String>, StatusCode> {
-    let db = state.db.lock().expect("the database should be lockable");
-    let post = db.get_by_slug(slug);
+    let db = state
+        .db
+        .lock()
+        .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)?;
+    let post = db.get_by_slug(slug).ok_or(StatusCode::NOT_FOUND)?;
     let (tags_with_count, dates_by_year) = prepare_nav_data(&*db);
     let template = PostTemplate {
         post,

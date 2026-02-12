@@ -4,7 +4,7 @@ mod database_tests {
     use personal::{
         db::*,
         error::ApplicationError,
-        repo_utils::{Repository, get_posts_from_repository},
+        repo_utils::{get_posts_from_repository, Repository},
     };
 
     #[tokio::test]
@@ -19,7 +19,7 @@ mod database_tests {
 
         assert_eq!(
             in_mem_db.get_by_slug("example-title".to_owned()),
-            posts.iter().next().unwrap().clone()
+            Some(posts.iter().next().unwrap().clone())
         );
         Ok(())
     }

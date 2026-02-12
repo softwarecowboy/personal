@@ -53,9 +53,21 @@ jobs:
         chmod 600 ~/.ssh/deploy_key
         echo "$SERVER_HOST_KEY" >> ~/.ssh/known_hosts
 
-        # Create directory on server if it doesn't exist
-        ssh -i ~/.ssh/deploy_key -p 10194 $SERVER_USER@$SERVER_HOST "mkdir -p /opt/personal"
+        # Create directories on server if they don't exist
+        ssh -i ~/.ssh/deploy_key -p 10194 $SERVER_USER@$SERVER_HOST "mkdir -p /opt/personal/static/misc /opt/personal/templates"
 
         # Copy binary to server
         scp -i ~/.ssh/deploy_key -P 10194 target/release/personal $SERVER_USER@$SERVER_HOST:/opt/personal/personal-new
         echo "✅ Binary copied to server at /opt/personal/personal-new"
+
+        # Copy static files to server
+        scp -i ~/.ssh/deploy_key -P 10194 -r static/* $SERVER_USER@$SERVER_HOST:/opt/personal/static/
+        echo "✅ Static files copied to server"
+
+        # Copy templates to server (for reference, though they're embedded in binary)
+        scp -i ~/.ssh/deploy_key -P 10194 -r templates/* $SERVER_USER@$SERVER_HOST:/opt/personal/templates/
+        echo "✅ Templates copied to server"
+
+        # Restart the service with the new binary
+        ssh -i ~/.ssh/deploy_key -p 10194 $SERVER_USER@$SERVER_HOST "chmod +x /opt/personal/personal-new && mv /opt/personal/personal-new /opt/personal/personal && systemctl restart personal"
+        echo "✅ Service restarted"

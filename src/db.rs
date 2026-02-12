@@ -6,7 +6,7 @@ use crate::data::Post;
 use crate::error::ApplicationError;
 
 pub trait Database {
-    fn get_by_slug(&self, slug: String) -> Post;
+    fn get_by_slug(&self, slug: String) -> Option<Post>;
     fn get_by_tag(&self, tag: String) -> Vec<Post>;
     fn get_by_series(&self, series: String) -> Vec<Post>;
     fn get_by_keyword(&self, keyword: String) -> Vec<Post>;
@@ -61,8 +61,8 @@ impl Database for InMemDatabase {
         Ok(())
     }
 
-    fn get_by_slug(&self, slug: String) -> Post {
-        self.by_slug.get(&slug).cloned().expect("Post not found")
+    fn get_by_slug(&self, slug: String) -> Option<Post> {
+        self.by_slug.get(&slug).cloned()
     }
 
     fn get_by_tag(&self, tag: String) -> Vec<Post> {
