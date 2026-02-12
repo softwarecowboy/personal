@@ -74,28 +74,27 @@ async fn replace_relative_paths(content: &str) -> String {
     .to_string()
 }
 fn markdown_to_html(markdown: &str) -> String {
-    // Preserve exact spacing: single line breaks = <br>, blank lines = <br><br>
-    let mut processed = String::new();
+    // Smart spacing:
+    // - Single line break = continues same paragraph
+    // - One blank line = new paragraph
+    // - Two+ blank lines = new paragraph with extra <br> for spacing
     let lines: Vec<&str> = markdown.lines().collect();
+    let mut processed = String::new();
+    let mut blank_count = 0;
 
-    for (i, line) in lines.iter().enumerate() {
-        processed.push_str(line);
-
-        if i < lines.len() - 1 {
-            let next_line = lines[i + 1];
-
-            // If current line is empty, we're at a blank line - add double break for visual space
-            if line.is_empty() {
-                processed.push_str("  \n  \n");
+    for line in lines.iter() {
+        if line.trim().is_empty() {
+            blank_count += 1;
+        } else {
+            // Add extra breaks for multiple blank lines (2+ blanks = paragraph + <br>)
+            if blank_count > 1 {
+                processed.push_str("\n\n<br>\n\n");
+            } else if blank_count == 1 {
+                processed.push_str("\n\n");
             }
-            // If next line is empty, add single break before the blank line
-            else if next_line.is_empty() {
-                processed.push_str("  \n");
-            }
-            // Both lines have content - single line break becomes <br>
-            else {
-                processed.push_str("  \n");
-            }
+            processed.push_str(line);
+            processed.push('\n');
+            blank_count = 0;
         }
     }
 
@@ -105,6 +104,7 @@ fn markdown_to_html(markdown: &str) -> String {
     options.insert(Options::ENABLE_FOOTNOTES);
     options.insert(Options::ENABLE_TASKLISTS);
     options.insert(Options::ENABLE_SMART_PUNCTUATION);
+    options.insert(Options::ENABLE_HEADING_ATTRIBUTES);
 
     let parser = Parser::new_ext(&processed, options);
     let mut html_output = String::new();
