@@ -383,6 +383,33 @@
         }
     </script>
 
-</body>
+    <script>
+        // Fixed dropdown hover behavior with delay
+        document.querySelectorAll('.relative.group').forEach((group) => {
+            const button = group.querySelector('button');
+            const dropdown = group.querySelector('[class*="opacity-0"]');
 
-</html>
+            if (!button || !dropdown) return;
+
+            let hideTimeout;
+
+            const show = () => {
+                clearTimeout(hideTimeout);
+                dropdown.classList.remove('opacity-0', 'invisible');
+                dropdown.classList.add('opacity-100', 'visible');
+            };
+
+            const hide = () => {
+                hideTimeout = setTimeout(() => {
+                    dropdown.classList.add('opacity-0', 'invisible');
+                    dropdown.classList.remove('opacity-100', 'visible');
+                }, 150);
+            };
+
+            button.addEventListener('mouseenter', show);
+            button.addEventListener('mouseleave', hide);
+            dropdown.addEventListener('mouseenter', show);
+            dropdown.addEventListener('mouseleave', hide);
+            group.addEventListener('mouseleave', hide);
+        });
+    </script>
