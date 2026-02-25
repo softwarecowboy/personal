@@ -2,7 +2,7 @@ use askama::Template;
 use axum::{
     extract::{Path, Query, State},
     http::StatusCode,
-    response::Html,
+    response::{Html, IntoResponse, Response},
 };
 use serde::Deserialize;
 use std::collections::HashMap;
@@ -218,4 +218,58 @@ fn month_name(month: u32) -> &'static str {
         12 => "December",
         _ => "Unknown",
     }
+}
+
+pub async fn robots_txt() -> Response {
+    let content = "User-agent: *\nAllow: /\n\nSitemap: https://rwd.rs/sitemap.xml\n";
+    (
+        axum::http::StatusCode::OK,
+        [(
+            axum::http::header::CONTENT_TYPE,
+            "text/plain; charset=utf-8",
+        )],
+        content,
+    )
+        .into_response()
+}
+
+pub async fn sitemap_xml(State(state): State<AppState>) -> Response {
+    let db = match state.db.lock() {
+        Ok(guard) => guard,
+        Err(_) => return StatusCode::INTERNAL_SERVER_ERROR.into_response(),
+    };
+
+    let mut xml = String::from("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
+    xml.push_str("<urlset xmlns=\"http://www.sitemaps.org/schemas/sitemap/0.9\">\n");
+
+    xml.push_str("  <url>\n");
+    xml.push_str("    <loc>https://rwd.rs/</loc>\n");
+    xml.push_str("    <priority>1.0</priority>\n");
+    xml.push_str("  </url>\n");
+
+    let mut posts = db.get_all_posts();
+    posts.sort_by(|a, b| b.markdown.date.cmp(&a.markdown.date));
+
+    for post in posts.iter().take(500) {
+        xml.push_str("  <url>\n");
+        xml.push_str(&format!(
+            "    <loc>https://rwd.rs/posts/{}</loc>\n",
+            post.markdown.slug
+        ));
+        xml.push_str(&format!("    <lastmod>{}</lastmod>\n", post.markdown.date));
+        xml.push_str("    <priority>0.8</priority>\n");
+        xml.push_str("  </url>\n");
+    }
+
+    xml.push_str("</urlset>");
+
+    (
+        axum::http::StatusCode::OK,
+        [(
+            axum::http::header::CONTENT_TYPE,
+            "application/xml; charset=utf-8",
+        )],
+        xml,
+    )
+        .into_response()
 }

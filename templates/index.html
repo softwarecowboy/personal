@@ -4,10 +4,49 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#f8fafc" media="(prefers-color-scheme: light)">
+    <meta name="theme-color" content="#020617" media="(prefers-color-scheme: dark)">
+
+    <!-- SEO & Meta Tags -->
     <meta name="description"
-        content="Rust, data, and software design - opinionated, benchmarked, and occasionally correct. Order varies.">
-    <title>rwd{% block title %}{% endblock %}</title>
+        content="{% block meta_description %}Rust, data, and software design - opinionated, benchmarked, and occasionally correct.{% endblock %}">
+    <meta name="keywords"
+        content="{% block meta_keywords %}rust, data, software engineering, systems design, databases{% endblock %}">
+    <meta name="author" content="Rafał Waldemar Draws">
+    <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+    <meta name="revisit-after" content="7 days">
+    <meta name="language" content="English">
+
+    <!-- Canonical URL -->
+    <link rel="canonical" href="{% block canonical %}https://rwd.rs/{% endblock %}">
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="{% block og_type %}website{% endblock %}">
+    <meta property="og:title" content="{% block og_title %}rwd - Rust with Data{% endblock %}">
+    <meta property="og:description"
+        content="{% block og_description %}Rust, data, and software design - opinionated, benchmarked, and occasionally correct.{% endblock %}">
+    <meta property="og:url" content="{% block og_url %}https://rwd.rs/{% endblock %}">
+    <meta property="og:site_name" content="rwd">
+    <meta property="og:locale" content="en_US">
+    <meta property="og:image" content="{% block og_image %}https://rwd.rs/static/og-image.png{% endblock %}">
+    <meta property="og:image:alt" content="{% block og_image_alt %}rwd - Rust with Data{% endblock %}">
+    <meta property="og:image:type" content="image/png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="{% block twitter_title %}rwd - Rust with Data{% endblock %}">
+    <meta name="twitter:description"
+        content="{% block twitter_description %}Rust, data, and software design - opinionated, benchmarked, and occasionally correct.{% endblock %}">
+    <meta name="twitter:image" content="{% block twitter_image %}https://rwd.rs/static/og-image.png{% endblock %}">
+    <meta name="twitter:image:alt" content="{% block twitter_image_alt %}rwd - Rust with Data{% endblock %}">
+    <meta name="twitter:creator" content="@rafaldraws">
+
+    <title>{% block full_title %}rwd - Rust with Data{% endblock %}</title>
     <link rel="icon" href="/static/favicon.svg" type="image/svg+xml" sizes="96x96">
+    <link rel="apple-touch-icon" href="/static/favicon.svg">
+    <link rel="alternate" type="application/rss+xml" title="rwd RSS Feed" href="/rss.xml">
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -26,6 +65,32 @@
         }
     </script>
     <link rel="stylesheet" href="/static/style.css">
+    <!-- Organization Structured Data -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "Organization",
+        "@id": "https://rwd.rs/#organization",
+        "name": "rwd",
+        "url": "https://rwd.rs",
+        "logo": "https://rwd.rs/static/favicon.svg",
+        "description": "Rust, data, and software design - opinionated, benchmarked, and occasionally correct.",
+        "founder": {
+            "@type": "Person",
+            "@id": "https://rwd.rs/#person",
+            "name": "Rafał Waldemar Draws"
+        },
+        "sameAs": [
+            "https://github.com/softwarecowboy",
+            "https://linkedin.com/in/rafaldraws"
+        ],
+        "contactPoint": {
+            "@type": "ContactPoint",
+            "contactType": "Customer Service",
+            "url": "https://rwd.rs"
+        }
+    }
+    </script>
 </head>
 
 <body class="bg-white dark:bg-slate-950 text-slate-900 dark:text-slate-50 transition-colors duration-300">

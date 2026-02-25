@@ -12,6 +12,7 @@ pub trait Database {
     fn get_by_keyword(&self, keyword: String) -> Vec<Post>;
     fn get_by_year_month(&self, year: i32, month: Option<u32>) -> Vec<Post>;
     fn get_last_n_posts(&self, n: usize) -> Vec<Post>;
+    fn get_all_posts(&self) -> Vec<Post>;
     fn get_all_tags_with_count(&self) -> Vec<(String, u8)>;
     fn get_all_dates_with_count(&self) -> Vec<((i32, u32), u8)>;
 
@@ -143,6 +144,10 @@ impl Database for InMemDatabase {
         let mut posts: Vec<Post> = self.by_slug.values().cloned().collect();
         posts.sort_by(|a, b| b.markdown.date.cmp(&a.markdown.date));
         posts.into_iter().take(n).collect()
+    }
+
+    fn get_all_posts(&self) -> Vec<Post> {
+        self.by_slug.values().cloned().collect()
     }
 
     fn get_all_tags_with_count(&self) -> Vec<(String, u8)> {

@@ -1,6 +1,19 @@
 {% extends "index.html" %}
 
-{% block title %} | {{ post.markdown.title }}{% endblock %}
+{% block full_title %}{{ post.markdown.title }} | rwd{% endblock %}
+{% block meta_description %}{{ post.markdown.title }}. Published on {{ post.markdown.date }}. Read about {{
+post.markdown.tags.join(", ") }} on rwd.{% endblock %}
+{% block meta_keywords %}{{ post.markdown.tags.join(", ") }}, rust, software engineering{% endblock %}
+{% block canonical %}https://rwd.rs/posts/{{ post.markdown.slug }}{% endblock %}
+{% block og_type %}article{% endblock %}
+{% block og_title %}{{ post.markdown.title }}{% endblock %}
+{% block og_description %}{{ post.markdown.title }}. Published on {{ post.markdown.date }}.{% endblock %}
+{% block og_url %}https://rwd.rs/posts/{{ post.markdown.slug }}{% endblock %}
+{% block og_image %}https://rwd.rs/static/og-image.png{% endblock %}
+{% block og_image_alt %}{{ post.markdown.title }}{% endblock %}
+{% block twitter_title %}{{ post.markdown.title }}{% endblock %}
+{% block twitter_description %}{{ post.markdown.title }}. Published on {{ post.markdown.date }}.{% endblock %}
+{% block twitter_image %}https://rwd.rs/static/og-image.png{% endblock %}
 
 {% block content %}
 <article class="max-w-4xl mx-auto px-4 py-8 md:py-12">
@@ -49,6 +62,40 @@
         </a>
     </nav>
 </article>
+
+<!-- JSON-LD Structured Data -->
+<script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "headline": "{{ post.markdown.title }}",
+    "description": "{{ post.markdown.title }}",
+    "image": "https://rwd.rs/static/og-image.png",
+    "datePublished": "{{ post.markdown.date }}",
+    "dateModified": "{{ post.markdown.date }}",
+    "author": {
+        "@type": "Person",
+        "name": "Rafał Waldemar Draws",
+        "url": "https://rwd.rs"
+    },
+    "publisher": {
+        "@type": "Organization",
+        "name": "rwd",
+        "url": "https://rwd.rs",
+        "logo": {
+            "@type": "ImageObject",
+            "url": "https://rwd.rs/static/favicon.svg"
+        }
+    },
+    "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": "https://rwd.rs/posts/{{ post.markdown.slug }}"
+    },
+    "keywords": "{{ post.markdown.tags.join(", ") }}",
+    "articleSection": "Technology",
+    "inLanguage": "en-US"
+}
+</script>
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css"
     media="(prefers-color-scheme: light)">

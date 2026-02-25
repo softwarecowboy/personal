@@ -11,14 +11,14 @@ use tower_http::services::ServeDir;
 #[tokio::main]
 async fn main() {
     let args: Vec<String> = std::env::args().collect();
-    
+
     // Check if a local path was provided as argument
     let (repo_source, is_local_path) = if args.len() > 1 {
         (args[1].clone(), true)
     } else {
         ("https://github.com/softwarecowboy/blog".to_string(), false)
     };
-    
+
     let db = if is_local_path {
         build_database_from_local_path(&repo_source)
             .await
@@ -33,7 +33,7 @@ async fn main() {
     let state = AppState::new(db);
     let repo_source_clone = repo_source.clone();
     let db_handle = state.db.clone();
-    
+
     // Only spawn the background reload task if using remote repo (not local path)
     if !is_local_path {
         tokio::spawn(async move {
@@ -57,6 +57,8 @@ async fn main() {
 
     let app = Router::new()
         .route("/", get(handlers::html_index))
+        .route("/robots.txt", get(handlers::robots_txt))
+        .route("/sitemap.xml", get(handlers::sitemap_xml))
         .route("/posts/{slug}", get(handlers::html_get_post_by_slug))
         .route("/posts/by-tag", get(handlers::html_get_posts_by_tag))
         .route("/posts/by-series", get(handlers::html_get_posts_by_series))
@@ -88,7 +90,9 @@ async fn build_database(repo_url: &str) -> Result<InMemDatabase, ApplicationErro
     Ok(db)
 }
 
-async fn build_database_from_local_path(local_path: &str) -> Result<InMemDatabase, ApplicationError> {
+async fn build_database_from_local_path(
+    local_path: &str,
+) -> Result<InMemDatabase, ApplicationError> {
     use personal::repo_utils::load_from_local_path;
     let posts = load_from_local_path(local_path).await?;
     let mut db = InMemDatabase::new();
