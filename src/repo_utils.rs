@@ -43,6 +43,59 @@ pub async fn get_posts_from_repository(repo: Repository) -> Result<Vec<Post>, Ap
     Ok(result)
 }
 
+/// Load posts from a local repository path (for debugging)
+///
+/// # Arguments
+/// * `local_path` - The path to a local repository directory
+///
+/// # Returns
+/// A vector of parsed posts from the local repository
+///
+/// # Effects
+/// - Copies all resources to static/misc/
+/// - Returns parsed posts ready for database insertion
+pub async fn load_from_local_path(local_path: &str) -> Result<Vec<Post>, ApplicationError> {
+    let repo_path = Path::new(local_path);
+
+    if !repo_path.exists() {
+        return Err(ApplicationError::IoError(std::io::Error::new(
+            std::io::ErrorKind::NotFound,
+            format!("Local path does not exist: {}", local_path),
+        )));
+    }
+
+    println!("Loading repository from local path: {}", local_path);
+
+    // Create Repository structure from local path
+    let repo = Repository::try_from(repo_path)?;
+
+    // Copy resources to static/misc/
+    let static_misc = Path::new("static/misc");
+    if !static_misc.exists() {
+        fs::create_dir_all(static_misc)?;
+        println!("Created directory: static/misc/");
+    }
+
+    // Copy all files from resources directory
+    if repo.resources.exists() {
+        println!(
+            "Copying resources from {:?} to {:?}",
+            repo.resources, static_misc
+        );
+        copy_dir_all(&repo.resources, static_misc)?;
+        println!("Resources copied successfully");
+    } else {
+        println!("Warning: No resources directory found in repository");
+    }
+
+    // Get all posts from the repository
+    let posts = get_posts_from_repository(repo).await?;
+
+    println!("Loaded {} posts from local repository", posts.len());
+
+    Ok(posts)
+}
+
 /// Clone a GitHub repository and ingest posts into the database
 ///
 /// # Arguments

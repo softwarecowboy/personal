@@ -10,30 +10,50 @@ use tower_http::services::ServeDir;
 
 #[tokio::main]
 async fn main() {
-    let repo_url = "https://github.com/softwarecowboy/blog";
-    let db = build_database(repo_url)
-        .await
-        .expect("Failed to load posts");
+    let args: Vec<String> = std::env::args().collect();
+    
+    // Check if a local path was provided as argument
+    let (repo_source, is_local_path) = if args.len() > 1 {
+        (args[1].clone(), true)
+    } else {
+        ("https://github.com/softwarecowboy/blog".to_string(), false)
+    };
+    
+    let db = if is_local_path {
+        build_database_from_local_path(&repo_source)
+            .await
+            .expect("Failed to load posts from local path")
+    } else {
+        build_database(&repo_source)
+            .await
+            .expect("Failed to load posts")
+    };
     println!("Loaded {} posts", db.by_slug.len());
 
     let state = AppState::new(db);
-    let repo_url = repo_url.to_string();
+    let repo_source_clone = repo_source.clone();
     let db_handle = state.db.clone();
-    tokio::spawn(async move {
-        loop {
-            let sleep_for = duration_until_next_midnight();
-            tokio::time::sleep(sleep_for).await;
-            match build_database(&repo_url).await {
-                Ok(new_db) => {
-                    let mut guard = db_handle.lock().expect("the database should be lockable");
-                    *guard = new_db;
-                }
-                Err(err) => {
-                    eprintln!("Failed to reload posts: {err}");
+    
+    // Only spawn the background reload task if using remote repo (not local path)
+    if !is_local_path {
+        tokio::spawn(async move {
+            loop {
+                let sleep_for = duration_until_next_midnight();
+                tokio::time::sleep(sleep_for).await;
+                match build_database(&repo_source_clone).await {
+                    Ok(new_db) => {
+                        let mut guard = db_handle.lock().expect("the database should be lockable");
+                        *guard = new_db;
+                    }
+                    Err(err) => {
+                        eprintln!("Failed to reload posts: {err}");
+                    }
                 }
             }
-        }
-    });
+        });
+    } else {
+        println!("Running in debug mode with local path - automatic reloading disabled");
+    }
 
     let app = Router::new()
         .route("/", get(handlers::html_index))
@@ -61,6 +81,16 @@ async fn main() {
 
 async fn build_database(repo_url: &str) -> Result<InMemDatabase, ApplicationError> {
     let posts = clone_and_ingest_repository(repo_url).await?;
+    let mut db = InMemDatabase::new();
+    for post in posts {
+        db.insert_parsed_to_database(post)?;
+    }
+    Ok(db)
+}
+
+async fn build_database_from_local_path(local_path: &str) -> Result<InMemDatabase, ApplicationError> {
+    use personal::repo_utils::load_from_local_path;
+    let posts = load_from_local_path(local_path).await?;
     let mut db = InMemDatabase::new();
     for post in posts {
         db.insert_parsed_to_database(post)?;

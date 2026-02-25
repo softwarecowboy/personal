@@ -56,4 +56,90 @@
     media="(prefers-color-scheme: dark)">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
 <script>hljs.highlightAll();</script>
+<div id="copy-toast" class="copy-toast" role="status" aria-live="polite" aria-hidden="true">Copied link</div>
+<script>
+    (function () {
+        const toast = document.getElementById('copy-toast');
+        const hashLinks = document.querySelectorAll('.heading-hash');
+        if (!hashLinks.length) {
+            return;
+        }
+
+        const article = document.querySelector('.markdown-content');
+        if (article) {
+            const headings = Array.from(article.querySelectorAll('h1, h2, h3, h4, h5, h6'));
+
+            headings.forEach((heading) => {
+                if (heading.closest('.heading-block')) {
+                    return;
+                }
+
+                const wrapper = document.createElement('div');
+                wrapper.className = 'heading-block';
+                const parent = heading.parentNode;
+
+                if (!parent) {
+                    return;
+                }
+
+                parent.insertBefore(wrapper, heading);
+                wrapper.appendChild(heading);
+
+                let sibling = wrapper.nextElementSibling;
+                while (sibling && !/^H[1-6]$/.test(sibling.tagName)) {
+                    const next = sibling.nextElementSibling;
+                    wrapper.appendChild(sibling);
+                    sibling = next;
+                }
+            });
+        }
+
+        function copyToClipboard(text) {
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                return navigator.clipboard.writeText(text).catch(() => undefined);
+            }
+
+            const temp = document.createElement('textarea');
+            temp.value = text;
+            temp.setAttribute('readonly', '');
+            temp.style.position = 'absolute';
+            temp.style.left = '-9999px';
+            document.body.appendChild(temp);
+            temp.select();
+            try {
+                document.execCommand('copy');
+            } catch (_err) {
+                // best effort
+            }
+            document.body.removeChild(temp);
+            return Promise.resolve();
+        }
+
+        hashLinks.forEach((link) => {
+            link.addEventListener('click', (event) => {
+                event.preventDefault();
+                const hash = link.getAttribute('href') || '';
+                if (!hash) {
+                    return;
+                }
+                const targetId = hash.replace('#', '');
+                if (!targetId) {
+                    return;
+                }
+                window.location.hash = targetId;
+                const url = new URL(window.location.href);
+                copyToClipboard(url.toString());
+
+                if (toast) {
+                    toast.classList.add('is-visible');
+                    toast.setAttribute('aria-hidden', 'false');
+                    window.setTimeout(() => {
+                        toast.classList.remove('is-visible');
+                        toast.setAttribute('aria-hidden', 'true');
+                    }, 1500);
+                }
+            });
+        });
+    })();
+</script>
 {% endblock %}
