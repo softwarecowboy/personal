@@ -33,6 +33,7 @@
     <meta property="og:image:type" content="image/png">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
+    <meta property="article:excerpt" content="{% block article_excerpt %}Rust, data, and software design{% endblock %}">
 
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image">
@@ -41,11 +42,11 @@
         content="{% block twitter_description %}Rust, data, and software design - opinionated, benchmarked, and occasionally correct.{% endblock %}">
     <meta name="twitter:image" content="{% block twitter_image %}https://rwd.works/static/og-image.png{% endblock %}">
     <meta name="twitter:image:alt" content="{% block twitter_image_alt %}rwd - Rust with Data{% endblock %}">
-    <meta name="twitter:creator" content="@rafaldraws">
+    <meta name="twitter:creator" content="@software_cowboy">
 
     <title>{% block full_title %}rwd - Rust with Data{% endblock %}</title>
-    <link rel="icon" href="/static/favicon.svg" type="image/svg+xml" sizes="96x96">
-    <link rel="apple-touch-icon" href="/static/favicon.svg">
+    <link rel="icon" href="/static/favicon.png" type="image/png" sizes="96x96">
+    <link rel="apple-touch-icon" href="/static/favicon.png" type="image/png">
     <link rel="alternate" type="application/rss+xml" title="rwd RSS Feed" href="/rss.xml">
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -73,7 +74,7 @@
         "@id": "https://rwd.works/#organization",
         "name": "rwd",
         "url": "https://rwd.works",
-        "logo": "https://rwd.works/static/favicon.svg",
+        "logo": "https://rwd.works/static/favicon.png",
         "description": "Rust, data, and software design - opinionated, benchmarked, and occasionally correct.",
         "founder": {
             "@type": "Person",
@@ -87,30 +88,7 @@
         "contactPoint": {
             "@type": "ContactPoint",
             "contactType": "Customer Service",
-            "url": "https://rwd.works"
-        }
-    }
-    </script>
-    <!-- Website Structured Data -->
-    <script type="application/ld+json">
-    {
-        "@context": "https://schema.org",
-        "@type": "WebSite",
-        "@id": "https://rwd.rs/#website",
-        "url": "https://rwd.rs",
-        "name": "rwd - Rust with Data",
-        "description": "Rust, data, and software design - opinionated, benchmarked, and occasionally correct.",
-        "inLanguage": "en-US",
-        "isPartOf": {
-            "@id": "https://rwd.rs/#organization"
-        },
-        "potentialAction": {
-            "@type": "SearchAction",
-            "target": {
-                "@type": "EntryPoint",
-                "urlTemplate": "https://rwd.rs/posts/by-keyword?keyword={search_term_string}"
-            },
-            "query-input": "required name=search_term_string"
+            "url": "https://rwd.works/contact"
         }
     }
     </script>
