@@ -221,7 +221,7 @@ fn month_name(month: u32) -> &'static str {
 }
 
 pub async fn robots_txt() -> Response {
-    let content = "User-agent: *\nAllow: /\n\nSitemap: https://rwd.rs/sitemap.xml\n";
+    let content = "User-agent: *\nAllow: /\n\nSitemap: https://rwd.works/sitemap.xml\n";
     (
         axum::http::StatusCode::OK,
         [(
@@ -243,7 +243,7 @@ pub async fn sitemap_xml(State(state): State<AppState>) -> Response {
     xml.push_str("<urlset xmlns=\"http://www.sitemaps.org/schemas/sitemap/0.9\">\n");
 
     xml.push_str("  <url>\n");
-    xml.push_str("    <loc>https://rwd.rs/</loc>\n");
+    xml.push_str("    <loc>https://rwd.works/</loc>\n");
     xml.push_str("    <priority>1.0</priority>\n");
     xml.push_str("  </url>\n");
 
@@ -253,7 +253,7 @@ pub async fn sitemap_xml(State(state): State<AppState>) -> Response {
     for post in posts.iter().take(500) {
         xml.push_str("  <url>\n");
         xml.push_str(&format!(
-            "    <loc>https://rwd.rs/posts/{}</loc>\n",
+            "    <loc>https://rwd.works/posts/{}</loc>\n",
             post.markdown.slug
         ));
         xml.push_str(&format!("    <lastmod>{}</lastmod>\n", post.markdown.date));

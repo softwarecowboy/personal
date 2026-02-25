@@ -4,12 +4,12 @@
 {% block meta_description %}{{ post.markdown.title }}. Published on {{ post.markdown.date }}. Read about {{
 post.markdown.tags.join(", ") }} on rwd.{% endblock %}
 {% block meta_keywords %}{{ post.markdown.tags.join(", ") }}, rust, software engineering{% endblock %}
-{% block canonical %}https://rwd.rs/posts/{{ post.markdown.slug }}{% endblock %}
+{% block canonical %}https://rwd.works/posts/{{ post.markdown.slug }}{% endblock %}
 {% block og_type %}article{% endblock %}
 {% block og_title %}{{ post.markdown.title }}{% endblock %}
 {% block og_description %}{{ post.markdown.title }}. Published on {{ post.markdown.date }}.{% endblock %}
-{% block og_url %}https://rwd.rs/posts/{{ post.markdown.slug }}{% endblock %}
-{% block og_image %}https://rwd.rs/static/og-image.png{% endblock %}
+{% block og_url %}https://rwd.works/posts/{{ post.markdown.slug }}{% endblock %}
+{% block og_image %}https://rwd.works/static/og-image.png{% endblock %}
 {% block og_image_alt %}{{ post.markdown.title }}{% endblock %}
 {% block twitter_title %}{{ post.markdown.title }}{% endblock %}
 {% block twitter_description %}{{ post.markdown.title }}. Published on {{ post.markdown.date }}.{% endblock %}
@@ -93,7 +93,10 @@ post.markdown.tags.join(", ") }} on rwd.{% endblock %}
     },
     "keywords": "{{ post.markdown.tags.join(", ") }}",
     "articleSection": "Technology",
-    "inLanguage": "en-US"
+    "inLanguage": "en-US",
+    "isPartOf": {
+        "@id": "https://rwd.rs/#website"
+    }
 }
 </script>
 

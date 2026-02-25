@@ -18,17 +18,17 @@
     <meta name="language" content="English">
 
     <!-- Canonical URL -->
-    <link rel="canonical" href="{% block canonical %}https://rwd.rs/{% endblock %}">
+    <link rel="canonical" href="{% block canonical %}https://rwd.works/{% endblock %}">
 
     <!-- Open Graph -->
     <meta property="og:type" content="{% block og_type %}website{% endblock %}">
     <meta property="og:title" content="{% block og_title %}rwd - Rust with Data{% endblock %}">
     <meta property="og:description"
         content="{% block og_description %}Rust, data, and software design - opinionated, benchmarked, and occasionally correct.{% endblock %}">
-    <meta property="og:url" content="{% block og_url %}https://rwd.rs/{% endblock %}">
+    <meta property="og:url" content="{% block og_url %}https://rwd.works/{% endblock %}">
     <meta property="og:site_name" content="rwd">
     <meta property="og:locale" content="en_US">
-    <meta property="og:image" content="{% block og_image %}https://rwd.rs/static/og-image.png{% endblock %}">
+    <meta property="og:image" content="{% block og_image %}https://rwd.works/static/og-image.png{% endblock %}">
     <meta property="og:image:alt" content="{% block og_image_alt %}rwd - Rust with Data{% endblock %}">
     <meta property="og:image:type" content="image/png">
     <meta property="og:image:width" content="1200">
@@ -39,7 +39,7 @@
     <meta name="twitter:title" content="{% block twitter_title %}rwd - Rust with Data{% endblock %}">
     <meta name="twitter:description"
         content="{% block twitter_description %}Rust, data, and software design - opinionated, benchmarked, and occasionally correct.{% endblock %}">
-    <meta name="twitter:image" content="{% block twitter_image %}https://rwd.rs/static/og-image.png{% endblock %}">
+    <meta name="twitter:image" content="{% block twitter_image %}https://rwd.works/static/og-image.png{% endblock %}">
     <meta name="twitter:image:alt" content="{% block twitter_image_alt %}rwd - Rust with Data{% endblock %}">
     <meta name="twitter:creator" content="@rafaldraws">
 
@@ -70,14 +70,14 @@
     {
         "@context": "https://schema.org",
         "@type": "Organization",
-        "@id": "https://rwd.rs/#organization",
+        "@id": "https://rwd.works/#organization",
         "name": "rwd",
-        "url": "https://rwd.rs",
-        "logo": "https://rwd.rs/static/favicon.svg",
+        "url": "https://rwd.works",
+        "logo": "https://rwd.works/static/favicon.svg",
         "description": "Rust, data, and software design - opinionated, benchmarked, and occasionally correct.",
         "founder": {
             "@type": "Person",
-            "@id": "https://rwd.rs/#person",
+            "@id": "https://rwd.works/#person",
             "name": "Rafał Waldemar Draws"
         },
         "sameAs": [
@@ -87,7 +87,30 @@
         "contactPoint": {
             "@type": "ContactPoint",
             "contactType": "Customer Service",
-            "url": "https://rwd.rs"
+            "url": "https://rwd.works"
+        }
+    }
+    </script>
+    <!-- Website Structured Data -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "@id": "https://rwd.rs/#website",
+        "url": "https://rwd.rs",
+        "name": "rwd - Rust with Data",
+        "description": "Rust, data, and software design - opinionated, benchmarked, and occasionally correct.",
+        "inLanguage": "en-US",
+        "isPartOf": {
+            "@id": "https://rwd.rs/#organization"
+        },
+        "potentialAction": {
+            "@type": "SearchAction",
+            "target": {
+                "@type": "EntryPoint",
+                "urlTemplate": "https://rwd.rs/posts/by-keyword?keyword={search_term_string}"
+            },
+            "query-input": "required name=search_term_string"
         }
     }
     </script>

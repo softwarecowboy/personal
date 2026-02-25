@@ -1,9 +1,9 @@
-use axum::{routing::get, Router};
+use axum::{routing::get, Router, middleware};
 use chrono::{Duration as ChronoDuration, Local, TimeZone};
 use personal::db::{Database, InMemDatabase};
 use personal::{
     error::ApplicationError,
-    http::{handlers, state::AppState},
+    http::{handlers, middleware::security_headers_middleware, state::AppState},
     repo_utils::clone_and_ingest_repository,
 };
 use tower_http::services::ServeDir;
@@ -68,6 +68,7 @@ async fn main() {
         )
         .route("/posts/by-date", get(handlers::html_get_posts_by_date))
         .nest_service("/static", ServeDir::new("static"))
+        .layer(middleware::from_fn(security_headers_middleware))
         .with_state(state);
 
     let listener = tokio::net::TcpListener::bind("127.0.0.1:3000")
