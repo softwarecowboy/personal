@@ -12,6 +12,7 @@ use crate::{data::Post, db::Database, http::state::AppState};
 #[template(path = "post.html")]
 pub struct PostTemplate {
     pub post: Post,
+    pub view_count: u64,
     pub tags_with_count: Vec<(String, u8)>,
     pub dates_by_year: Vec<(i32, Vec<(String, u32, u8)>)>,
 }
@@ -57,14 +58,29 @@ pub async fn html_get_post_by_slug(
     Path(slug): Path<String>,
     State(state): State<AppState>,
 ) -> Result<Html<String>, StatusCode> {
-    let db = state
-        .db
-        .lock()
-        .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)?;
-    let post = db.get_by_slug(slug).ok_or(StatusCode::NOT_FOUND)?;
-    let (tags_with_count, dates_by_year) = prepare_nav_data(&*db);
+    let (post, tags_with_count, dates_by_year) = {
+        let db = state
+            .db
+            .lock()
+            .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)?;
+        let post = db.get_by_slug(slug.clone()).ok_or(StatusCode::NOT_FOUND)?;
+        let (tags_with_count, dates_by_year) = prepare_nav_data(&*db);
+        (post, tags_with_count, dates_by_year)
+    };
+
+    let view_count = {
+        let mut views = state
+            .views
+            .lock()
+            .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)?;
+        views
+            .increment(&slug)
+            .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)?
+    };
+
     let template = PostTemplate {
         post,
+        view_count,
         tags_with_count,
         dates_by_year,
     };

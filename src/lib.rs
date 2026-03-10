@@ -4,3 +4,4 @@ pub mod error;
 pub mod http;
 pub mod repo_utils;
 pub mod seo;
+pub mod views;

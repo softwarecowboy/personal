@@ -1,11 +1,13 @@
-use axum::{routing::get, Router, middleware};
+use axum::{middleware, routing::get, Router};
 use chrono::{Duration as ChronoDuration, Local, TimeZone};
 use personal::db::{Database, InMemDatabase};
 use personal::{
     error::ApplicationError,
     http::{handlers, middleware::security_headers_middleware, state::AppState},
     repo_utils::clone_and_ingest_repository,
+    views::ViewCounterStore,
 };
+use std::path::PathBuf;
 use tower_http::services::ServeDir;
 
 #[tokio::main]
@@ -30,7 +32,21 @@ async fn main() {
     };
     println!("Loaded {} posts", db.by_slug.len());
 
-    let state = AppState::new(db);
+    let views_file_path = std::env::var("VIEW_COUNTS_FILE")
+        .map(PathBuf::from)
+        .unwrap_or_else(|_| {
+            if is_local_path {
+                PathBuf::from("tmp/views.tsv")
+            } else {
+                PathBuf::from("/opt/personal/runtime/views.tsv")
+            }
+        });
+    let views_store = ViewCounterStore::load(views_file_path.clone())
+        .expect("Failed to initialize view counters storage");
+
+    println!("Using views file at {}", views_file_path.display());
+
+    let state = AppState::new(db, views_store);
     let repo_source_clone = repo_source.clone();
     let db_handle = state.db.clone();
 

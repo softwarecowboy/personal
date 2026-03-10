@@ -16,6 +16,7 @@ pub struct Post {
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq, Eq, ToSchema)]
 pub struct Markdown {
     pub title: String,
+    pub description: String,
     pub slug: String,
     pub tags: Vec<String>,
     pub date: NaiveDate,
@@ -45,6 +46,12 @@ pub async fn parse_to_data(path: &PathBuf) -> Result<Post, ApplicationError> {
         })?;
     println!("{}", markdown_part);
     let markdown: Markdown = serde_yaml::from_str(markdown_part)?;
+    if markdown.description.chars().count() > 200 {
+        return Err(ApplicationError::ParsingError {
+            path: path.clone(),
+            reason: "Frontmatter `description` must be at most 200 characters".to_string(),
+        });
+    }
     let content = split.nth(2).ok_or_else(|| ApplicationError::ParsingError {
         path: path.clone(),
         reason: "Missing markdown content after frontmatter".to_string(),

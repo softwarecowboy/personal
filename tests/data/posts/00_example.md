@@ -1,5 +1,6 @@
 ---
 title: Example title
+description: Example short description for post listing.
 slug: example-title
 tags: ["rust", "machine-learning", ]
 date: 2026-02-07

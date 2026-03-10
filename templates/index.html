@@ -105,7 +105,7 @@
                         <span id="full-text"
                             class="max-w-0 inline-block transition-all duration-500 ease-out overflow-hidden whitespace-nowrap opacity-0">rust&nbsp;with&nbsp;data</span><span
                             id="short-text"
-                            class="inline-block transition-opacity duration-300 ease-out opacity-100">rwd</span>
+                            class="inline-block transition-opacity duration-300 ease-out opacity-100">[rwd]</span>
                     </a>
                 </h1>
 
@@ -134,6 +134,10 @@
                                 {{ post.markdown.title }}
                             </a>
                         </h3>
+
+                        <p class="text-sm md:text-base text-slate-600 dark:text-slate-400 mb-4 font-light">
+                            {{ post.markdown.description }}
+                        </p>
 
                         <div class="flex flex-wrap gap-4 text-sm text-slate-600 dark:text-slate-400">
                             <span class="font-light">{{ post.markdown.date }}</span>
