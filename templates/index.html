@@ -22,14 +22,14 @@
 
     <!-- Open Graph -->
     <meta property="og:type" content="{% block og_type %}website{% endblock %}">
-    <meta property="og:title" content="{% block og_title %}rwd - Rust with Data{% endblock %}">
+    <meta property="og:title" content="{% block og_title %}rwd.works{% endblock %}">
     <meta property="og:description"
         content="{% block og_description %}Rust, data, and software design - opinionated, benchmarked, and occasionally correct.{% endblock %}">
     <meta property="og:url" content="{% block og_url %}https://rwd.works/{% endblock %}">
-    <meta property="og:site_name" content="rwd">
+    <meta property="og:site_name" content="rwd.works">
     <meta property="og:locale" content="en_US">
     <meta property="og:image" content="{% block og_image %}https://rwd.works/static/og-image.png{% endblock %}">
-    <meta property="og:image:alt" content="{% block og_image_alt %}rwd - Rust with Data{% endblock %}">
+    <meta property="og:image:alt" content="{% block og_image_alt %}rwd.works{% endblock %}">
     <meta property="og:image:type" content="image/png">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
@@ -37,17 +37,17 @@
 
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="{% block twitter_title %}rwd - Rust with Data{% endblock %}">
+    <meta name="twitter:title" content="{% block twitter_title %}rwd.works{% endblock %}">
     <meta name="twitter:description"
         content="{% block twitter_description %}Rust, data, and software design - opinionated, benchmarked, and occasionally correct.{% endblock %}">
     <meta name="twitter:image" content="{% block twitter_image %}https://rwd.works/static/og-image.png{% endblock %}">
-    <meta name="twitter:image:alt" content="{% block twitter_image_alt %}rwd - Rust with Data{% endblock %}">
+    <meta name="twitter:image:alt" content="{% block twitter_image_alt %}rwd.works{% endblock %}">
     <meta name="twitter:creator" content="@software_cowboy">
 
-    <title>{% block full_title %}rwd - Rust with Data{% endblock %}</title>
+    <title>{% block full_title %}rwd.works{% endblock %}</title>
     <link rel="icon" href="/static/favicon.png" type="image/png" sizes="96x96">
     <link rel="apple-touch-icon" href="/static/favicon.png" type="image/png">
-    <link rel="alternate" type="application/rss+xml" title="rwd RSS Feed" href="/rss.xml">
+    <link rel="alternate" type="application/rss+xml" title="rwd.works RSS Feed" href="/rss.xml">
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -72,7 +72,7 @@
         "@context": "https://schema.org",
         "@type": "Organization",
         "@id": "https://rwd.works/#organization",
-        "name": "rwd",
+        "name": "rwd.works",
         "url": "https://rwd.works",
         "logo": "https://rwd.works/static/favicon.png",
         "description": "Rust, data, and software design - opinionated, benchmarked, and occasionally correct.",
@@ -99,13 +99,10 @@
         <div class="max-w-7xl mx-auto px-4 py-8 sm:py-12 md:py-16">
             <div class="mb-8 md:mb-10">
                 <h1 id="title-container"
-                    class="text-3xl sm:text-4xl md:text-5xl font-light tracking-tight mb-2 inline-block min-h-[4rem] sm:min-h-[4.5rem] md:min-h-[5.5rem] flex items-center">
+                    class="text-3xl sm:text-4xl md:text-5xl font-light tracking-tight mb-2 inline-block flex items-center">
                     <a href="/"
                         class="cursor-pointer hover:text-slate-700 dark:hover:text-slate-300 transition-colors flex items-center pb-2">
-                        <span id="full-text"
-                            class="max-w-0 inline-block transition-all duration-500 ease-out overflow-hidden whitespace-nowrap opacity-0">rust&nbsp;with&nbsp;data</span><span
-                            id="short-text"
-                            class="inline-block transition-opacity duration-300 ease-out opacity-100">[rwd]</span>
+                        rwd.works
                     </a>
                 </h1>
 
@@ -270,63 +267,6 @@
             </div>
         </div>
     </footer>
-    <script>
-        const titleContainer = document.getElementById('title-container');
-        const fullText = document.getElementById('full-text');
-        const shortText = document.getElementById('short-text');
-        let hoverTimeout;
-        let hoverCount = 0;
-
-        // Array of different text variations to cycle through
-        const textVariations = [
-            'rust with data',
-            'rafal waldemar draws',
-            'definitely not responsive web design',
-            'rear wheel drive',
-            'rust with data',
-            'rotary wing division',
-            'real world data',
-            'rust with data',
-            'rewarding work department',
-            'risk weighted distribution',
-            'random wild descriptions',
-            'real world data',
-            'rust with data',
-            'remote window detection',
-            'reward weighted delivery',
-            'read write delete',
-            'rust with data',
-        ];
-
-        titleContainer.addEventListener('mouseenter', () => {
-            clearTimeout(hoverTimeout);
-
-            const index = Math.min(hoverCount, textVariations.length - 1);
-            fullText.textContent = textVariations[index];
-            hoverCount++;
-
-            fullText.style.maxWidth = '100%';
-            setTimeout(() => {
-                shortText.style.opacity = '0';
-                shortText.style.pointerEvents = 'none';
-            }, 0);
-            fullText.style.opacity = '1';
-        });
-
-        titleContainer.addEventListener('mouseleave', () => {
-            hoverTimeout = setTimeout(() => {
-                fullText.style.opacity = '0';
-                shortText.style.opacity = '1';
-                shortText.style.pointerEvents = 'auto';
-                fullText.style.maxWidth = '0';
-            }, 200);
-        });
-
-        fullText.style.maxWidth = '0';
-        fullText.style.opacity = '0';
-        shortText.style.opacity = '1';
-    </script>
-
     <script>
         function initTheme() {
             const isDark = localStorage.getItem('theme') === 'dark' ||

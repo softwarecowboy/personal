@@ -51,6 +51,16 @@ impl ViewCounterStore {
         self.counts.get(slug).copied().unwrap_or(0)
     }
 
+    pub fn snapshot_sorted(&self) -> Vec<(String, u64)> {
+        let mut entries: Vec<(String, u64)> = self
+            .counts
+            .iter()
+            .map(|(slug, count)| (slug.clone(), *count))
+            .collect();
+        entries.sort_by(|a, b| b.1.cmp(&a.1).then_with(|| a.0.cmp(&b.0)));
+        entries
+    }
+
     fn persist(&self) -> io::Result<()> {
         if let Some(parent) = self.file_path.parent() {
             fs::create_dir_all(parent)?;
